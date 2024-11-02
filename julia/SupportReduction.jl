@@ -14,9 +14,6 @@ begin
 	using Distributions
 	using LinearAlgebra
 	using LinearSolve
-	using SCS
-	using Dualization
-	using Ipopt
 	using Plots
 end
 
