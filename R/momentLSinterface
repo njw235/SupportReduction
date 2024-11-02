@@ -4,12 +4,18 @@ julia = julia_setup()
 
 julia_source("C:/Users/Nathan Weaver/MomentLS.jl")
 
-measure = julia_call("momentLSmod", r, delta_tilde, 1e-7)
+gridfreeSR <- function(r, delta_tilde, tol){
 
-support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
-weight = vector(mode = "numeric", length = length(measure[[2]]) -1)
+  measure = julia_call("momentLSmod", r, delta_tilde, 1e-7)
 
-for(i in 1:length(support)){
-  support[i] = measure[[1]][[i]]
-  weight[i] = measure[[2]][[i]]
+  support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
+  weight = vector(mode = "numeric", length = length(measure[[2]]) -1)
+  
+  for(i in 1:length(support)){
+    support[i] = measure[[1]][[i]]
+    weight[i] = measure[[2]][[i]]
+  }
+
+
+  return(c(support, weight))
 }
