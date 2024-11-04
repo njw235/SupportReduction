@@ -45,7 +45,11 @@ grad_optimize = function(r,p, supp, weight, solver,delta)
 	
 			
 		h = f + (-2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1])*d
-		 S = @set x >= 0 && 1-x >= 0
+		if abs(ind[2]) == n
+			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
+		else
+			S = @set x >= 0 && 1-x >= 0
+		end
 		@variable(model,s)
 			
 		@constraint(model,c, h >= s*d, domain = S)
