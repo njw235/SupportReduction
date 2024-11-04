@@ -181,8 +181,11 @@ momentLS = function(a, b, r, tol)
 		h = f + (-2 * sum(r[1:ln] .* x.^exponents[1:ln]) + r[1])*prod((1 .- x.*supp))
 		d = prod((1 .- x.*supp))
 		
-		print(h)
-		print(d)
+		if(count == 2)
+			display(plot(grid, h.(grid)./d.(grid)))
+		else
+			display(plot!(grid, h.(grid)./d.(grid)))
+		end
 	 	S = @set x-a >= 0 && b-x >= 0
 		@variable(model,s)
 		
