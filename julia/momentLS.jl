@@ -76,7 +76,7 @@ grad_optimize = function(r,p, supp, weight, solver,delta)
 end
 
 # ╔═╡ 51a02742-b86a-426c-8851-d05d9daf90e5
-SR = function(supp, weight)
+SR = function(supp, weight,r)
 		validmeasure = false
 		proposed = weight
 	exponents = [0:1:9999;]
@@ -219,8 +219,8 @@ end
 
 # ╔═╡ aec9bb69-44ba-4c55-b5f2-990dc56b959e
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^3)))
-	t = Int(floor(2^abs(i) * log(10^3)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^6)))
+	t = Int(floor(2^abs(i) * log(10^6)))
 		a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
@@ -272,7 +272,7 @@ momentLSmod = function(r, delta,tol, graph = false)
 	conv = false
 	count = 0
 	while(count < 10 && !conv)
-		SRstep = SR(supp, weight)
+		SRstep = SR(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
 	
@@ -286,7 +286,7 @@ momentLSmod = function(r, delta,tol, graph = false)
 		append!(weight, 0)
 		if(graph == true)
             a = zeros(length(pts))
-            b = zeros(length(supp))
+            b = zeros(length(pts))
             for i in 1:length(a)
                 a[i] = -2*sum(r.* pts[i].^exponents) + r[1]
                 b[i] = sum(weight.*(1 .+ pts[i].*supp)./(1 .- pts[i].*supp))
@@ -296,6 +296,8 @@ momentLSmod = function(r, delta,tol, graph = false)
                 display(plot(pts, val))
             else
                 diplay(plot!(pts,val))
+
+
             end
         end
             
