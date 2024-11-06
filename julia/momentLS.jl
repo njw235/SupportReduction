@@ -293,9 +293,9 @@ momentLSmod = function(r, delta,tol, graph = false)
             end
             val = a+b
             if(count == 1)
-                plot(pts, val)
+                display(plot(pts, val))
             else
-                plot!(pts,val)
+                diplay(plot!(pts,val))
             end
         end
             
