@@ -219,8 +219,8 @@ end
 
 # ╔═╡ aec9bb69-44ba-4c55-b5f2-990dc56b959e
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^6)))
-	t = Int(floor(2^abs(i) * log(10^6)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^4)))
+	t = Int(floor(2^abs(i) * log(10^4)))
 		a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
@@ -271,7 +271,7 @@ momentLSmod = function(r, delta,tol, graph = false)
 
 	conv = false
 	count = 0
-	while(count < 10 && !conv)
+	while(count < 50 && !conv)
 		SRstep = SR(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
@@ -295,9 +295,7 @@ momentLSmod = function(r, delta,tol, graph = false)
             if(count == 1)
                 display(plot(pts, val))
             else
-                diplay(plot!(pts,val))
-
-
+                display(plot!(pts,val))
             end
         end
             
