@@ -76,7 +76,7 @@ grad_optimize = function(r,p, supp, weight, solver,delta)
 end
 
 # ╔═╡ 51a02742-b86a-426c-8851-d05d9daf90e5
-SR = function(supp, weight)
+SR = function(supp, weight,r)
 		validmeasure = false
 		proposed = weight
 	exponents = [0:1:9999;]
@@ -272,7 +272,7 @@ momentLSmod = function(r, delta,tol, graph = false)
 	conv = false
 	count = 0
 	while(count < 10 && !conv)
-		SRstep = SR(supp, weight)
+		SRstep = SR(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
 	
