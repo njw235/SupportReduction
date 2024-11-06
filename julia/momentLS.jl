@@ -79,7 +79,7 @@ end
 SR = function(supp, weight,r)
 		validmeasure = false
 		proposed = weight
-	exponents = [0:1:9999;]
+	exponents = [0:1:length(r)-1;]
 		while(!validmeasure)
 			B = zeros(length(supp), length(supp))
 			for i in 1:length(supp)
