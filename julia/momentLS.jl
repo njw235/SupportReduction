@@ -256,18 +256,13 @@ end
 solver = Clarabel.Optimizer
 
 # ╔═╡ 770d00c8-e037-4621-91bd-e9a919c8568a
-momentLSmod = function(r, delta,tol, graph = false)
+momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	id = append!([1:1:13;], [-13:1:-1;])
 	dictionary = Dict(id .=> [estimate_poly(i,r) for i = append!([1:1:13;],[-13:1:-1;])])
 	pts = [-1+delta:0.01:1-delta;]
 	solver = Clarabel.Optimizer
 	n = length(r)
-	supp = [rand(Uniform(-1,1))]
 	exponents = [0:1:n-1;]
-	ai = 2*sum((supp[1].^exponents).*r) - r[1]
-	Bi = (1 + supp[1]^2)/(1-supp[1]^2)
-
-	weight = [ai/Bi]
 
 	conv = false
 	count = 0
