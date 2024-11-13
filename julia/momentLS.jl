@@ -78,8 +78,8 @@ end
 # ╔═╡ 51a02742-b86a-426c-8851-d05d9daf90e5
 SR = function(supp, weight,r)
 		validmeasure = false
-		proposed = weight
-	exponents = [0:1:length(r)-1;]
+		current = weight
+	exponent = [0:1:length(r)-1;]
 		while(!validmeasure)
 			B = zeros(length(supp), length(supp))
 			for i in 1:length(supp)
@@ -89,25 +89,25 @@ SR = function(supp, weight,r)
 			end
 			c = zeros(length(supp))
 			for i in 1:length(supp)
-				c[i] = 2*sum((supp[i].^exponents) .* r) - r[1]
+				c[i] = 2*sum((supp[i].^exponent) .* r) - r[1]
 			end
 
 			prob = LinearProblem(B,c)
 			sol = LinearSolve.solve(prob)
-			unrestweight = sol.u
+			new = sol.u
 			
-			if(all( >=(0), unrestweight))
+			if(all( >=(0), new))
 				validmeasure = true
-				weight = unrestweight
+				weight = new
 			else
-				t = unrestweight./(unrestweight .- proposed)
+				t = - current ./(new .- current)
 				pop!(t)
 				t[t .< 0] .= typemax(Int)
-				t[t .> 0] .= typemax(Int)
+				t[t .> 1] .= typemax(Int)
 				bd = findmin(t)
-				proposed = (1-bd[1]).*proposed + bd[1] .* unrestweight
+				current = (1-bd[1]).*current + bd[1] .* new
 				deleteat!(supp, bd[2])
-				deleteat!(proposed,bd[2])
+				deleteat!(current,bd[2])
 			end
 
 		end
