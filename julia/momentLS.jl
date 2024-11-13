@@ -100,7 +100,7 @@ SR = function(supp, weight,r)
 				validmeasure = true
 				weight = unrestweight
 			else
-				t = proposed./(-unrestweight .+ proposed)
+				t = unrestweight./(unrestweight .- proposed)
 				pop!(t)
 				t[t .< 0] .= typemax(Int)
 				t[t .> 0] .= typemax(Int)
