@@ -11,7 +11,8 @@ for(j in 1:ncol(ch_blasso$x)){
   dhat<- tune_delta(ch_blasso$x[,j], 5)$delta*0.8
   m <- SR1(r = r, delta = dhat)
   avar_blasso[j] <- avar(m)
-  measure = julia_call("momentLSmod", r, dhat, m$support, m$weights, 1e-8)
+  invisible(julia_call("momentLSmod", r, dhat, c(0,0.1), c(0,0), 100))
+  measure = julia_call("momentLSmod", r, dhat,c(0,0.1), c(0,0), 1e-8)
   
   support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
   weight = vector(mode = "numeric", length = length(measure[[2]]) -1)
@@ -36,6 +37,7 @@ for(j in 1:ncol(ch_mh$x)){
   
   m <- SR1(r = r, delta = dhat)
   avar_mh[j] <- avar(m)
+  invisible(julia_call("momentLSmod", r, dhat, c(0,0.1), c(0,0), 100))
   measure = julia_call("momentLSmod", r,  dhat, m$support, m$weights, 1e-8)
   
   support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
@@ -60,6 +62,7 @@ for(j in 1:ncol(ch_pg$x)){
   
   m <- SR1(r = r, delta = dhat)
   avar_pg[j] <- avar(m)
+  invisible(julia_call("momentLSmod", r, dhat, c(0,0.1), c(0,0), 100))
   measure = julia_call("momentLSmod", r,  dhat, m$support, m$weights, 1e-8)
   
   support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
@@ -86,6 +89,7 @@ for(j in 1:ncol(ch_var$x)){
   
   m <- SR1(r = r, delta = dhat)
   avar_var[j] <- avar(m)
+  invisible(julia_call("momentLSmod", r, dhat, c(0,0.1), c(0,0), 100))
   measure = julia_call("momentLSmod", r, dhat, m$support, m$weights, 1e-8)
   
   support = vector(mode = "numeric", length = length(measure[[1]]) - 1)
