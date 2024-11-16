@@ -29,7 +29,8 @@ grad_optimize = function(r,p, supp, weight, solver,delta)
 	n = -Int(floor(log2(delta)))
 	for ind in zip([1:1:2*n;],append!([1:1:n;], [-n:1:-1;]))
 		#trying with replacing alpha with x
-		model = SOSModel(solver)
+		model = SOSModel(solver;add_bridges = false)
+        set_string_names_on_creation(model, false)
 		@polyvar x
 		f = 0
 		for i in 1:length(supp)
