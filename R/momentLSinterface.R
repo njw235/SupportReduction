@@ -2,7 +2,7 @@ library(JuliaCall)
 
 julia = julia_setup()
 
-julia_source("/julia/MomentLS.jl")
+julia_source("julia/MomentLS.jl")
 
 gridfreeSR <- function(r, delta_tilde, tol, type = "sub"){
   if(type == "sub"){
