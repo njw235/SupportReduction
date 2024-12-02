@@ -9,6 +9,12 @@ using LinearSolve
 using Plots
 using StatsBase
 
+
+transform = function(x,i)
+	return(sign(i)*((1+x)*(1-2.0^-abs(i)) - x))
+end
+
+
 Empirical = function(x)
     
     n = length(x)
@@ -111,11 +117,11 @@ SRm = function(supp, weight,r)
 return(supp, weight)
 end
 
-stimate_poly = function(i,r)
+estimate_poly = function(i,r)
 	m = Int(ceil(exp(1+1/exp(1))*log(10^6)))
 	t = Int(floor(2^abs(i) * log(10^6)))
 		a0 = (1- 2.0^-abs(i))
-	up = min(m-1,t)
+	up = min(m-1,t, length(r))
 
 	b = zeros(up)
 
@@ -131,7 +137,7 @@ end
 
 mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
 	id = [1:1:13;]
-	dictionary = Dict(id .=> [estimate_poly(i,r) for i = append!([1:1:13;],[-13:1:-1;])])
+	dictionary = Dict(id .=> [estimate_poly(i,r) for i in [1:1:13;]])
 	pts = [-1+delta:0.01:1-delta;]
 	solver = Clarabel.Optimizer
 	n = length(r)
@@ -173,7 +179,7 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
 	return(supp, weight)
 end
 
-sim_data = function(n::Int, option::Int)
+function sim_data(n, option)::AbstractArray{Integer}
     data = []
     for i in 1:n
         if(option == 1)
