@@ -173,4 +173,26 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
 	return(supp, weight)
 end
 
-
+sim_data = function(n::Int, option::Int){
+    data = []
+    if option == 1
+        r = rand(Uniform(0,1))
+        if r < 1/3
+            append!(data, rand(Geometric(0.8)))
+        else
+            append!(data, rand(Geometric(0.6)))
+        end
+    elseif option == 2
+        r = rand(Uniform(0,1))
+        if r < 1/4
+            append!(data, rand(Geometric(0.9)))
+        elseif r > 1/4 && r < 3/4
+            append!(data, rand(Geometric(0.7)))
+        else
+            append!(data, rand(Geometric(0.2)))
+        end
+    elseif option == 3
+        r = rand(Uniform(0,1))
+        append!(data, rand(Geometric(1-r)))
+    end
+}
