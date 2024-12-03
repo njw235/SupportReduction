@@ -260,11 +260,11 @@ for i in 1:3
     x = [0:1:10000;]
 
     if(i == 1)
-        error[i] = sum((pmf.(x) .- pmft1.(x)).^2)
+        errors[i] = sum((pmf.(x) .- pmft1.(x)).^2)
     elseif(i == 2)
-        error[i] = sum((pmf.(x) .- pmft2.(x)).^2)
+        errors[i] = sum((pmf.(x) .- pmft2.(x)).^2)
     else
-        error[i] = sum((pmf.(x) .- pmft3.(x)).^2)
+        errors[i] = sum((pmf.(x) .- pmft3.(x)).^2)
     end
 end
 
