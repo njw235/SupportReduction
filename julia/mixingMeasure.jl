@@ -242,7 +242,7 @@ for i in 1:3
     elseif(i == 2)
         d = 0.1
     else
-        d = 0.0001
+        d = 0.001
     end
 
     supp = [0.1]
@@ -268,4 +268,4 @@ for i in 1:3
     end
 end
 
-error
+errors
