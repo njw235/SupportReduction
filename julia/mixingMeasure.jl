@@ -118,10 +118,10 @@ return(supp, weight)
 end
 
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^6)))
-	t = Int(floor(2^abs(i) * log(10^6)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^8)))
+	t = Int(floor(2^abs(i) * log(10^8)))
 		a0 = (1- 2.0^-abs(i))
-	up = min(m-1,t, length(r))
+	up = min(m-1,t)
 
 	b = zeros(up)
 
@@ -216,7 +216,6 @@ end
 # Two finite mixtures of geometrics and a mixture model with
 # Uniform distribution as the mixing measure 
 
-errors = zeros(3,100)
 
 
 function pmft3(x)
@@ -231,42 +230,51 @@ end
 function pmft1(x)
     (1/3)*0.8*0.2^x + (2/3)*0.6*0.4^x
 end
-for j in 1:100
-    for i in 1:3
+errordict = Dict()
 
-        p = sim_data(1000,1)
-        r = Empirical(p)
+for N in [50,100,500,1000,5000,10000]
+    errors = zeros(3,100)
+    for j in 1:100
+        for i in 1:3
 
-        if(i == 1)
-            d = 0.4
-        elseif(i == 2)
-            d = 0.1
-        else
-            d = 0.0002
-        end
+            p = sim_data(N,1)
+            r = Empirical(p)
 
-        supp = [0.1]
-        weight = [0.5]
+            if(i == 1)
+                d = 0.4
+            elseif(i == 2)
+                d = 0.1
+            else
+                d = 0.0002
+            end
 
-        m = mixingmeasure(r, d, supp, weight, 1e-8)
+            supp = [0.1]
+            weight = [0.5]
 
-        supp = m[1]
-        weight = m[2]
+            m = mixingmeasure(r, d, supp, weight, 1e-8)
 
-        function pmf(x)
-            sum(weight .* (1 .- supp) .* supp.^x)
-        end
-        
-        x = [0:1:10000;]
+            supp = m[1]
+            weight = m[2]
 
-        if(i == 1)
-            errors[i,j] = sum((pmf.(x) .- pmft1.(x)).^2)
-        elseif(i == 2)
-            errors[i,j] = sum((pmf.(x) .- pmft2.(x)).^2)
-        else
-            errors[i,j] = sum((pmf.(x) .- pmft3.(x)).^2)
+            function pmf(x)
+                sum(weight .* (1 .- supp) .* supp.^x)
+            end
+            
+            x = [0:1:10000;]
+
+            if(i == 1)
+                errors[i,j] = sum((pmf.(x) .- pmft1.(x)).^2)
+            elseif(i == 2)
+                errors[i,j] = sum((pmf.(x) .- pmft2.(x)).^2)
+            else
+                errors[i,j] = sum((pmf.(x) .- pmft3.(x)).^2)
+            end
         end
     end
+
+    errorlist = reduce(+, eachcol(errors)) ./ size(errors,2)
+
+    errordict[n] = errorlist 
 end
 
-reduce(+, eachcol(errors)) ./ size(errors,2)
+errordict
