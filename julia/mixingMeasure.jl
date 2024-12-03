@@ -145,7 +145,7 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
 
 	conv = false
 	count = 0
-	while(count < 50 && !conv)
+	while(count < 100 && !conv)
 		SRstep = SRm(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
@@ -269,4 +269,4 @@ for j in 1:100
     end
 end
 
-reduce(+, eachcol(errors)) ./ ncol(errors)
+reduce(+, eachcol(errors)) ./ size(errors,2)
