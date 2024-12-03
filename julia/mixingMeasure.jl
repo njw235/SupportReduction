@@ -216,7 +216,7 @@ end
 # Two finite mixtures of geometrics and a mixture model with
 # Uniform distribution as the mixing measure 
 
-errors = zeros(3)
+errors = zeros(3,100)
 
 
 function pmft3(x)
@@ -231,41 +231,42 @@ end
 function pmft1(x)
     (1/3)*0.8*0.2^x + (2/3)*0.6*0.4^x
 end
+for j in 1:100
+    for i in 1:3
 
-for i in 1:3
+        p = sim_data(1000,1)
+        r = Empirical(p)
 
-    p = sim_data(1000,1)
-    r = Empirical(p)
+        if(i == 1)
+            d = 0.4
+        elseif(i == 2)
+            d = 0.1
+        else
+            d = 0.001
+        end
 
-    if(i == 1)
-        d = 0.4
-    elseif(i == 2)
-        d = 0.1
-    else
-        d = 0.001
-    end
+        supp = [0.1]
+        weight = [0.5]
 
-    supp = [0.1]
-    weight = [0.5]
+        m = mixingmeasure(r, d, supp, weight, 1e-8)
 
-    m = mixingmeasure(r, d, supp, weight, 1e-8)
+        supp = m[1]
+        weight = m[2]
 
-    supp = m[1]
-    weight = m[2]
+        function pmf(x)
+            sum(weight .* (1 .- supp) .* supp.^x)
+        end
+        
+        x = [0:1:10000;]
 
-    function pmf(x)
-        sum(weight .* (1 .- supp) .* supp.^x)
-    end
-    
-    x = [0:1:10000;]
-
-    if(i == 1)
-        errors[i] = sum((pmf.(x) .- pmft1.(x)).^2)
-    elseif(i == 2)
-        errors[i] = sum((pmf.(x) .- pmft2.(x)).^2)
-    else
-        errors[i] = sum((pmf.(x) .- pmft3.(x)).^2)
+        if(i == 1)
+            errors[i,j] = sum((pmf.(x) .- pmft1.(x)).^2)
+        elseif(i == 2)
+            errors[i,j] = sum((pmf.(x) .- pmft2.(x)).^2)
+        else
+            errors[i,j] = sum((pmf.(x) .- pmft3.(x)).^2)
+        end
     end
 end
 
-errors
+reduce(+, eachcol(errors)) ./ ncol(errors)
