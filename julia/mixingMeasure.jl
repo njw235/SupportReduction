@@ -242,7 +242,7 @@ for j in 1:100
         elseif(i == 2)
             d = 0.1
         else
-            d = 0.001
+            d = 0.0002
         end
 
         supp = [0.1]
