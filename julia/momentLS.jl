@@ -14,7 +14,7 @@ using Plots
 using PackageCompiler, Libdl
 
 PackageCompiler.create_sysimage(["Clarabel", "SumOfSquares", "DynamicPolynomials",
-"RCall", "Random", "Distributions", "LinearALgebra", "LinearSolve", "Plots"],
+"RCall", "Distributions", "LinearAlgebra", "LinearSolve", "Plots"],
 sysimage_path = "customimage." * Libdl.dlext,
 precompile_execution_file = "momentLS.jl")
 
