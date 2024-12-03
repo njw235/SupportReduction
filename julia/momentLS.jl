@@ -13,10 +13,6 @@ using Plots
 
 using PackageCompiler, Libdl
 
-PackageCompiler.create_sysimage(["Clarabel", "SumOfSquares", "DynamicPolynomials",
-"RCall", "Distributions", "LinearSolve", "Plots"],
-sysimage_path = "customimage." * Libdl.dlext,
-precompile_execution_file = "momentLS.jl")
 
 
 transform = function(x,i)
