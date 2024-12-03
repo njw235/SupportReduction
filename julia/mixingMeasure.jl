@@ -47,7 +47,7 @@ grad_opt = function(r,p, supp, weight, solver,delta)
 		d = prod((1 .- transform(x,ind[2]).*supp))
 	
 			
-		h = (f + (-sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]))*d)*(1-transform(x,ind[2]))
+		h = (f -1*sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;])*d)*(1-transform(x,ind[2]))
 		if abs(ind[2]) == n
 			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
 		else
@@ -207,3 +207,65 @@ function sim_data(n, option)::AbstractArray{Integer}
     end
     return(data)
 end
+
+
+
+
+# Simulation studies
+# Using the three pmfs from the paper given
+# Two finite mixtures of geometrics and a mixture model with
+# Uniform distribution as the mixing measure 
+
+errors = zeros(3)
+
+
+function pmft3(x)
+    1/((x+1)*(x+2))
+end
+
+
+function pmft2(x)
+    0.25*0.9*0.1^x + 0.5*0.7*0.3^x + 0.25*0.2*0.8^x
+end
+
+function pmft1(x)
+    (1/3)*0.8*0.2^x + (2/3)*0.6*0.4^x
+end
+
+for i in 1:3
+
+    p = sim_data(1000,1)
+    r = Empirical(p1)
+
+    if(i == 1)
+        d = 0.4
+    elseif(i == 2)
+        d = 0.1
+    else
+        d = 0.0001
+    end
+
+    supp = [0.1]
+    weight = [0.5]
+
+    m = mixingmeasure(r, d, supp, weight, 1e-8)
+
+    supp = m[1]
+    weight = m[2]
+
+    function pmf(x)
+        sum(weight .* (1 .- supp) .* supp.^x)
+    end
+    
+    x = [0:1:10000;]
+
+    if(i == 1)
+        error[i] = sum((pmf.(x) .- pmft1.(x)).^2)
+    elseif(i == 2)
+        error[i] = sum((pmf.(x) .- pmft2.(x)).^2)
+    else
+        error[i] = sum((pmf.(x) .- pmft3.(x)).^2)
+    end
+end
+
+error
