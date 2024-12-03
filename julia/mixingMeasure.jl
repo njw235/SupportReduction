@@ -237,7 +237,7 @@ for N in [50,100,500,1000,5000,10000]
     for j in 1:100
         for i in 1:3
 
-            p = sim_data(N,1)
+            p = sim_data(N,i)
             r = Empirical(p)
 
             if(i == 1)
