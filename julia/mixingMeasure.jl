@@ -235,7 +235,7 @@ end
 for i in 1:3
 
     p = sim_data(1000,1)
-    r = Empirical(p1)
+    r = Empirical(p)
 
     if(i == 1)
         d = 0.4
