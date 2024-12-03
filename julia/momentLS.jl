@@ -11,6 +11,13 @@ using LinearAlgebra
 using LinearSolve
 using Plots
 
+using PackageCompiler, Libdl
+
+PackageCompiler.create_sysimage(["Clarabel", "SumOfSquares", "DynamicPolynomials",
+"RCall", "Random", "Distributions", "LinearALgebra", "LinearSolve", "Plots"],
+sysimage_path = "customimage." * Libdl.dlext,
+precompile_execution_file = "momentLS.jl")
+
 
 transform = function(x,i)
 	return(sign(i)*((1+x)*(1-2.0^-abs(i)) - x))
