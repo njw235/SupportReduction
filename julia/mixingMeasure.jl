@@ -32,6 +32,7 @@ grad_opt = function(r,p, supp, weight, solver,delta)
 	for ind in zip([1:1:n;],[1:1:n;])
 		#trying with replacing alpha with x
 		model = SOSModel(solver)
+        @polyvar x
         set_string_names_on_creation(model, false)
 		f = 0
 		for i in 1:length(supp)
