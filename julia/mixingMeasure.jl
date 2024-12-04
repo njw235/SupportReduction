@@ -33,7 +33,6 @@ grad_opt = function(r,p, supp, weight, solver,delta)
 		#trying with replacing alpha with x
 		model = SOSModel(solver)
         set_string_names_on_creation(model, false)
-		@polyvar x
 		f = 0
 		for i in 1:length(supp)
 			g=1
@@ -47,7 +46,7 @@ grad_opt = function(r,p, supp, weight, solver,delta)
 		d = prod((1 .- transform(x,ind[2]).*supp))
 	
 			
-		h = (f -1*sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;])*d)*(1-transform(x,ind[2]))
+		h = (f -1*p[ind[2]]*d)*(1-transform(x,ind[2]))
 		if abs(ind[2]) == n
 			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
 		else
@@ -117,7 +116,7 @@ SRm = function(supp, weight,r)
 return(supp, weight)
 end
 
-estimate_poly = function(i,r)
+estimate_poly = function(i,r,x)
 	m = Int(ceil(exp(1+1/exp(1))*log(10^8)))
 	t = Int(floor(2^abs(i) * log(10^8)))
 		a0 = (1- 2.0^-abs(i))
@@ -132,12 +131,13 @@ estimate_poly = function(i,r)
 		b[j+1] = (-1)^j * b[j+1]
 	end
 	
-	return(b,a0,up)
+    return(sum(b .* x .^ [0:1:up-1]))
 end
 
 mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
+    @polyvar x
 	id = [1:1:13;]
-	dictionary = Dict(id .=> [estimate_poly(i,r) for i in [1:1:13;]])
+	dictionary = Dict(id .=> [estimate_poly(i,r,x) for i in [1:1:13;]])
 	pts = [-1+delta:0.01:1-delta;]
 	solver = Clarabel.Optimizer
 	n = length(r)
@@ -233,8 +233,8 @@ end
 errordict = Dict()
 
 for N in [50,100,500,1000,5000,10000]
-    errors = zeros(3,100)
-    for j in 1:100
+    errors = zeros(3,1)
+    for j in 1:1
         for i in 1:3
 
             p = sim_data(N,i)
