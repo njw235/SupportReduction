@@ -232,7 +232,7 @@ function pmft1(x)
     (1/3)*0.8*0.2^x + (2/3)*0.6*0.4^x
 end
 errordict = Dict()
-
+#=
 for N in [50,100,500,1000,5000,10000]
     errors = zeros(3,1)
     for j in 1:1
@@ -279,3 +279,4 @@ for N in [50,100,500,1000,5000,10000]
 end
 
 errordict
+=#
