@@ -131,7 +131,7 @@ estimate_poly = function(i,r,x)
 		b[j+1] = (-1)^j * b[j+1]
 	end
 	
-    return(sum(b .* x .^ [0:1:up-1]))
+    return(sum(b .* x .^ [0:1:up-1;]))
 end
 
 mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
