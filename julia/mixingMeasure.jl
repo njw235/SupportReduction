@@ -54,7 +54,7 @@ grad_opt = function(p, supp, weight, solver,delta,x)
 			
 		@constraint(model,c, h >= s*d, domain = S)
 		@objective(model, Max, s)
-		#set_silent(model)
+		set_silent(model)
 		optimize!(model)
 			
 		v = moment_matrix(model[:c])
