@@ -237,7 +237,7 @@ errordict = Dict()
 
 for N in [50,100,500,1000,5000,10000]
     errors = zeros(3,10)
-    for j in 1:10
+    for j in 1:5
         for i in 1:3
 
             p = sim_data(N,i)
@@ -258,7 +258,6 @@ for N in [50,100,500,1000,5000,10000]
 
             supp = m[1]
             weight = m[2]
-
             function pmf(x)
                 sum(weight .* (1 .- supp) .* supp.^x)
             end
