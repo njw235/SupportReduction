@@ -25,7 +25,7 @@ Empirical = function(x)
 
 end
 
-grad_opt = function(r,p, supp, weight, solver,delta,x)
+grad_opt = function(p, supp, weight, solver,delta,x)
 	gradients = zeros(13)
 	supports = zeros(13)
 	n = -Int(floor(log2(delta)))
@@ -47,11 +47,9 @@ grad_opt = function(r,p, supp, weight, solver,delta,x)
 	
 			
 		h = (f - p[ind[2]]*d)*(1-transform(x,ind[2]))
-		if abs(ind[2]) == n
-			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
-		else
-			S = @set x >= 0 && 1-x >= 0
-		end
+
+		S = @set x >= 0 && 1-x >= 0
+
 		@variable(model,s)
 			
 		@constraint(model,c, h >= s*d, domain = S)
@@ -80,18 +78,19 @@ end
 
 SRm = function(supp, weight,r)
     validmeasure = false
-    current = weight
+    support = copy(supp)
+    current = copy(weight)
     exponent = [0:1:length(r)-1;]
     while(!validmeasure)
-        B = zeros(length(supp), length(supp))
-        for i in 1:length(supp)
-            for j in 1:length(supp)
-                B[i,j] = (1-supp[j])/(1-supp[i]*supp[j])	
+        B = zeros(length(support), length(support))
+        for i in 1:length(support)
+            for j in 1:length(support)
+                B[i,j] = (1-support[j])/(1-support[i]*support[j])	
             end
         end
-        c = zeros(length(supp))
-        for i in 1:length(supp)
-            c[i] = sum((supp[i].^exponent) .* r)
+        c = zeros(length(support))
+        for i in 1:length(support)
+            c[i] = sum((support[i].^exponent) .* r)
         end
 
         prob = LinearProblem(B,c)
@@ -108,12 +107,12 @@ SRm = function(supp, weight,r)
             t[t .> 1] .= typemax(Int)
             bd = findmin(t)
             current = (1-bd[1]).*current + bd[1] .* new
-            deleteat!(supp, bd[2])
+            deleteat!(support, bd[2])
             deleteat!(current,bd[2])
         end
 
     end
-return(supp, weight)
+return(support, weight)
 end
 
 estimate_poly = function(i,r,x)
@@ -138,34 +137,35 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
     @polyvar x
 	id = [1:1:13;]
 	dictionary = Dict(id .=> [estimate_poly(i,r,x) for i in [1:1:13;]])
-	pts = [-1+delta:0.01:1-delta;]
+	pts = [0:0.01:1-delta;]
 	solver = Clarabel.Optimizer
 	n = length(r)
 	exponents = [0:1:n-1;]
-
+    s = copy(supp)
+    w = copy(weight)
 	conv = false
 	count = 0
 	while(count < 100 && !conv)
-		SRstep = SRm(supp, weight,r)
-		supp = SRstep[1]
-		weight = SRstep[2]
+		SRstep = SRm(s, w,r)
+		s = SRstep[1]
+		w = SRstep[2]
 	
 		
-		points = grad_opt(r, dictionary, supp, weight, solver,delta,x)
+		points = grad_opt(dictionary, s, w, solver,delta,x)
 		index = findmin(points[1])[2]
 		if(findmin(points[1])[1] > -tol)
 			conv = true
 		end
-		append!(supp, points[2][index])
-		append!(weight, 0)
+		append!(s, points[2][index])
+		append!(w, 0)
 		if(graph == true)
             a = zeros(length(pts))
             b = zeros(length(pts))
             for i in 1:length(a)
-                a[i] = -2*sum(r.* pts[i].^exponents) + r[1]
-                b[i] = sum(weight.*(1 .+ pts[i].*supp)./(1 .- pts[i].*supp))
+                a[i] = -sum(r.* pts[i].^exponents)
+                b[i] = sum(weight.*(1 .- supp)./(1 .- pts[i].*supp))
             end
-            val = a+b
+            val = (1 .- pts) .* (a+b)
             if(count == 1)
                 display(plot(pts, val))
             else
@@ -175,8 +175,10 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
             
 		count = count + 1
 	end
-	
-	return(supp, weight)
+	if(!conv)
+        print("failed to converge")
+    end
+	return(s, w)
 end
 
 function sim_data(n, option)::AbstractArray{Integer}
