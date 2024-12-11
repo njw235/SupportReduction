@@ -25,14 +25,13 @@ Empirical = function(x)
 
 end
 
-grad_opt = function(r,p, supp, weight, solver,delta)
+grad_opt = function(r,p, supp, weight, solver,delta,x)
 	gradients = zeros(13)
 	supports = zeros(13)
 	n = -Int(floor(log2(delta)))
 	for ind in zip([1:1:n;],[1:1:n;])
 		#trying with replacing alpha with x
 		model = SOSModel(solver)
-        @polyvar x
         set_string_names_on_creation(model, false)
 		f = 0
 		for i in 1:length(supp)
@@ -47,7 +46,7 @@ grad_opt = function(r,p, supp, weight, solver,delta)
 		d = prod((1 .- transform(x,ind[2]).*supp))
 	
 			
-		h = (f -1*p[ind[2]]*d)*(1-transform(x,ind[2]))
+		h = (f - p[ind[2]]*d)*(1-transform(x,ind[2]))
 		if abs(ind[2]) == n
 			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
 		else
@@ -152,7 +151,7 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
 		weight = SRstep[2]
 	
 		
-		points = grad_opt(r, dictionary, supp, weight, solver,delta)
+		points = grad_opt(r, dictionary, supp, weight, solver,delta,x)
 		index = findmin(points[1])[2]
 		if(findmin(points[1])[1] > -tol)
 			conv = true
