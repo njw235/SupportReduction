@@ -54,7 +54,7 @@ grad_opt = function(p, supp, weight, solver,delta,x)
 			
 		@constraint(model,c, h >= s*d, domain = S)
 		@objective(model, Max, s)
-		set_silent(model)
+		#set_silent(model)
 		optimize!(model)
 			
 		v = moment_matrix(model[:c])
@@ -116,9 +116,9 @@ return(support, weight)
 end
 
 estimate_poly = function(i,r,x)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^8)))
-	t = Int(floor(2^abs(i) * log(10^8)))
-		a0 = (1- 2.0^-abs(i))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^4)))
+	t = Int(floor(2^abs(i) * log(10^4)))
+	a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
 	b = zeros(up)
@@ -233,10 +233,11 @@ function pmft1(x)
     (1/3)*0.8*0.2^x + (2/3)*0.6*0.4^x
 end
 errordict = Dict()
-#=
+
+
 for N in [50,100,500,1000,5000,10000]
     errors = zeros(3,1)
-    for j in 1:1
+    for j in 1:10
         for i in 1:3
 
             p = sim_data(N,i)
@@ -280,4 +281,4 @@ for N in [50,100,500,1000,5000,10000]
 end
 
 errordict
-=#
+
