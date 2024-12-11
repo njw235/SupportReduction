@@ -236,7 +236,7 @@ errordict = Dict()
 
 
 for N in [50,100,500,1000,5000,10000]
-    errors = zeros(3,1)
+    errors = zeros(3,10)
     for j in 1:10
         for i in 1:3
 
