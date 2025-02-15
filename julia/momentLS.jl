@@ -300,15 +300,3 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 end
 
 
-# Simulation examples
-
-R"library(momentLS)"
-R"load('data/MC_chains.RData')"
-R"x = ch_blasso$x[,1]"
-R"r = autocov(x)"
-R"dhat = tune_delta(x,5)$delta*0.8"
-
-@rget r
-@rget dhat
-
-momentLSmod(r, dhat, [0.0], [0.0], 1e-8)

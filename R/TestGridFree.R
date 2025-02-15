@@ -1,4 +1,9 @@
 library(momentLS)
+library(JuliaCall)
+
+julia = julia_setup()
+
+julia_source("julia/MomentLS.jl")
 load("data/MC_chains.Rdata")
 
 # univariate MCSE estimation for chains in ch_blasso
