@@ -10,8 +10,8 @@ using Distributions
 using LinearAlgebra
 using LinearSolve
 using Plots
+using Krylov
 
-using PackageCompiler, Libdl
 
 
 
@@ -92,7 +92,7 @@ SR = function(supp, weight,r)
 			end
 
 			prob = LinearProblem(B,c)
-			sol = LinearSolve.solve(prob)
+			sol = LinearSolve.solve(prob, KrylovJL_GMRES())
 			new = sol.u
 			
 			if(all( >=(0), new))
