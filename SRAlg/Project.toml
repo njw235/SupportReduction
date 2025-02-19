@@ -1,0 +1,7 @@
+name = "SRAlg"
+uuid = "4511151d-fe73-483e-8c56-e9e3c1b6fad6"
+authors = ["njw235 <njw235@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+OptimalTransport = "7e02d93a-ae51-4f58-b602-d97af76e3b33"
