@@ -90,9 +90,7 @@ SR = function(supp, weight,r)
 			end
 
 			
-			prob = LinearProblem(B,c)
-        	sol = LinearSolve.solve(prob, nothing)
-        	new = sol.u
+			new = B/c
 			
 			if(all( >=(0), new))
 				validmeasure = true
