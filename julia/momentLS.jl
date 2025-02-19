@@ -91,9 +91,8 @@ SR = function(supp, weight,r)
 				c[i] = 2*sum((supp[i].^exponent) .* r) - r[1]
 			end
 
-			prob = LinearProblem(B,c)
-			sol = LinearSolve.solve(prob, KrylovJL_GMRES())
-			new = sol.u
+			
+			new = B/transpose(c)
 			
 			if(all( >=(0), new))
 				validmeasure = true

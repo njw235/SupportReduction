@@ -10,7 +10,7 @@ for N in 2:5
         R"dhat = tune_delta(x,5)$delta*0.8"
         @rget r
         @rget dhat
-        m = momentLSmod(r, dhat, [0.3],[0.0], 3e-13)
+        m = momentLSmod(r, dhat, [0.3],[0.0], 3e-16)
         supp = m[1]
         weight = m[2]
         @rput supp
