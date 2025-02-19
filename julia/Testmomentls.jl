@@ -18,11 +18,8 @@ for N in 2:5
         R"m = SR1(r,dhat)"
         R"errorp = L2diff_L2Moment(r,supp, weight)"
         R"errorg = L2diff_L2Moment(r, m$support, m$weights)"
-        R"mG = wpp(m$support, m$weights)"
-        R"mP = wpp(supp, weight)"
-        R"me = wpp(c(0.5), c(r[1]))"
-        R"errG = wasserstein(me, mG)"
-        R"errP = wasserstein(me,mP)"
+        R"errG = wasserstein1d(m$support, c(0.5), p = 1, m$weights, c(r[1]))"
+        R"errP = wasserstein1d(supp, c(0.5), p = 1, weight, c(r[1]))"
         @rget errorp
         @rget errorg
         @rget errP
