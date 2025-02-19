@@ -2,7 +2,7 @@ errors = zeros(4,5)
 for N in 2:5
     for j in 1:5
         @rput N
-        R"x = generateChain(list(type  = 'AR', rho = 0.5, M = N))$x"
+        R"x = generateChain(list(type  = 'AR', rho = 0.5, M = 10^N))$x"
         R"r = autocov(x)"
         R"dhat = tune_delta(x,5)$delta*0.8"
         @rget r
