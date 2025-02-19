@@ -218,8 +218,8 @@ end
 
 
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^8)))
-	t = Int(floor(2^abs(i) * log(10^8)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^10)))
+	t = Int(floor(2^abs(i) * log(10^10)))
 		a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
@@ -266,7 +266,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 
 	conv = false
 	count = 0
-	while(count < 50 && !conv)
+	while(count < 100 && !conv)
 		SRstep = SR(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
