@@ -10,8 +10,6 @@ using Distributions
 using LinearAlgebra
 using LinearSolve
 using Plots
-using Krylov
-
 
 
 
@@ -93,8 +91,8 @@ SR = function(supp, weight,r)
 
 			
 			prob = LinearProblem(B,c)
-        sol = LinearSolve.solve(prob)
-        new = sol.u
+        	sol = LinearSolve.solve(prob, nothing)
+        	new = sol.u
 			
 			if(all( >=(0), new))
 				validmeasure = true
