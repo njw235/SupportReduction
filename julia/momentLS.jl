@@ -90,7 +90,7 @@ SR = function(supp, weight,r)
 			end
 
 			
-			new = B/c
+			new = B\c
 			
 			if(all( >=(0), new))
 				validmeasure = true
