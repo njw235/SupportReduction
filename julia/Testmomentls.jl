@@ -1,3 +1,5 @@
+R"load('data/MC_chains.Rdata')"
+
 errorsP = zeros(4,5)
 errorsG = zeros(4,5)
 WerrorsP = zeros(4,5)
@@ -29,4 +31,79 @@ for N in 2:5
         WerrorsP[N-1,j] = errP
         WerrorsG[N-1,j] = errG
     end
+end
+
+
+
+errorb = zeros(9)
+errormh = zeros(5)
+errorpg = zeros(6)
+errorvar = zeros(4)
+
+for i in 1:9
+    @rput i
+    R"r = autocov(ch_blasso$x[,i])"
+    R"dhat = tune_delta, ch_blasso$x[,i],5)$delta*0.8"
+    @rget r
+    @rget dhat
+    m = momentLSmod(r, dhat, [0.0], [0.0], 3e-16)
+    supp = m[1]
+    weight = m[2]
+    @rput supp
+    @rput weight
+    R"m = SR1(r, dhat)"
+    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weights)"
+    @rget err
+    errorb[i] = err
+end
+
+for i in 1:5
+    @rput i
+    R"r = autocov(ch_mh$x[,i])"
+    R"dhat = tune_delta, ch_mh$x[,i],5)$delta*0.8"
+    @rget r
+    @rget dhat
+    m = momentLSmod(r, dhat, [0.0], [0.0], 3e-16)
+    supp = m[1]
+    weight = m[2]
+    @rput supp
+    @rput weight
+    R"m = SR1(r, dhat)"
+    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weights)"
+    @rget err
+    errormh[i] = err
+end
+
+for i in 1:6
+    @rput i
+    R"r = autocov(ch_pg$x[,i])"
+    R"dhat = tune_delta, ch_pg$x[,i],5)$delta*0.8"
+    @rget r
+    @rget dhat
+    m = momentLSmod(r, dhat, [0.0], [0.0], 3e-16)
+    supp = m[1]
+    weight = m[2]
+    @rput supp
+    @rput weight
+    R"m = SR1(r, dhat)"
+    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weights)"
+    @rget err
+    errorpg[i] = err
+end
+
+for i in 1:4
+    @rput i
+    R"r = autocov(ch_var$x[,i])"
+    R"dhat = tune_delta, ch_var$x[,i],5)$delta*0.8"
+    @rget r
+    @rget dhat
+    m = momentLSmod(r, dhat, [0.0], [0.0], 3e-16)
+    supp = m[1]
+    weight = m[2]
+    @rput supp
+    @rput weight
+    R"m = SR1(r, dhat)"
+    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weights)"
+    @rget err
+    errorvar[i] = err
 end
