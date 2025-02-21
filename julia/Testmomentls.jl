@@ -35,10 +35,15 @@ end
 
 
 
-errorb = zeros(9)
-errormh = zeros(5)
-errorpg = zeros(6)
-errorvar = zeros(4)
+errorbG = zeros(9)
+errormhG = zeros(5)
+errorpgG = zeros(6)
+errorvarG = zeros(4)
+
+errorbP = zeros(9)
+errormhP = zeros(5)
+errorpgP = zeros(6)
+errorvarP = zeros(4)
 
 for i in 1:9
     @rput i
@@ -52,9 +57,12 @@ for i in 1:9
     @rput supp
     @rput weight
     R"m = SR1(r, dhat)"
-    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weight)"
-    @rget err
-    errorb[i] = err
+    R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
+    R"err2 = L2diff_L2Moment(r, supp, weight)"
+    @rget err1
+    @rget err2
+    errorbG[i] = err1
+    errorbP[i] = err2
 end
 
 for i in 1:5
@@ -68,10 +76,12 @@ for i in 1:5
     weight = m[2]
     @rput supp
     @rput weight
-    R"m = SR1(r, dhat)"
-    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weight)"
-    @rget err
-    errormh[i] = err
+    R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
+    R"err2 = L2diff_L2Moment(r, supp, weight)"
+    @rget err1
+    @rget err2
+    errormhG[i] = err1
+    errormhP[i] = err2
 end
 
 for i in 1:6
@@ -85,10 +95,12 @@ for i in 1:6
     weight = m[2]
     @rput supp
     @rput weight
-    R"m = SR1(r, dhat)"
-    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weight)"
-    @rget err
-    errorpg[i] = err
+    R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
+    R"err2 = L2diff_L2Moment(r, supp, weight)"
+    @rget err1
+    @rget err2
+    errorpgG[i] = err1
+    errorpgP[i] = err2
 end
 
 for i in 1:4
@@ -102,8 +114,10 @@ for i in 1:4
     weight = m[2]
     @rput supp
     @rput weight
-    R"m = SR1(r, dhat)"
-    R"err = L2diff_L2Moment(r, m$support, m$weights) - L2diff_L2Moment(r, supp, weight)"
-    @rget err
-    errorvar[i] = err
+    R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
+    R"err2 = L2diff_L2Moment(r, supp, weight)"
+    @rget err1
+    @rget err2
+    errorvarG[i] = err1
+    errorvarP[i] = err2
 end

@@ -18,7 +18,7 @@ transform = function(x,i)
 end
 
 
-grad_optimize = function(r,p, supp, weight, solver,delta)
+grad_optimize = function(r,p, supp, weight, solver,delta,g)
 	gradients = zeros(26)
 	supports = zeros(26)
 	n = -Int(floor(log2(delta)))
@@ -40,7 +40,7 @@ grad_optimize = function(r,p, supp, weight, solver,delta)
 		d = prod((1 .- transform(x,ind[2]).*supp))
 	
 			
-		h = f + (-2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1])*d
+		h = f + (g(x))*d
 		if abs(ind[2]) == n
 			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
 		else
@@ -261,7 +261,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	solver = Clarabel.Optimizer
 	n = length(r)
 	exponents = [0:1:n-1;]
-
+	g(x) = -2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1]
 	conv = false
 	count = 0
 	while(count < 100 && !conv)
@@ -270,7 +270,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 		weight = SRstep[2]
 	
 		
-		points = grad_optimize(r, dictionary, supp, weight, solver,delta)
+		points = grad_optimize(r, dictionary, supp, weight, solver,delta,g)
 		index = findmin(points[1])[2]
 		if(findmin(points[1])[1] > -tol)
 			conv = true
