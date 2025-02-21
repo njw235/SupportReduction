@@ -260,7 +260,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	pts = [-1+delta:0.01:1-delta;]
 	n = length(r)
 	exponents = [0:1:n-1;]
-	g(x) = -2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1]
+	g(x) = -2 * sum(dictionary[ind[2]][1] .* x.^[0:1:dictionary[ind[2]][3]-1;]) + r[1]
 	conv = false
 	count = 0
 	while(count < 100 && !conv)
