@@ -35,15 +35,15 @@ end
 
 
 
-errorbG = zeros(9)
-errormhG = zeros(5)
-errorpgG = zeros(6)
-errorvarG = zeros(4)
+errorbG = zeros(9,2)
+errormhG = zeros(5,2)
+errorpgG = zeros(6,2)
+errorvarG = zeros(4,2)
 
-errorbP = zeros(9)
-errormhP = zeros(5)
-errorpgP = zeros(6)
-errorvarP = zeros(4)
+errorbP = zeros(9,2)
+errormhP = zeros(5,2)
+errorpgP = zeros(6,2)
+errorvarP = zeros(4,2)
 
 for i in 1:9
     @rput i

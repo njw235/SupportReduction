@@ -10,6 +10,7 @@ using Distributions
 using LinearAlgebra
 using LinearSolve
 using Plots
+using Dualization
 
 
 
@@ -18,10 +19,11 @@ transform = function(x,i)
 end
 
 
-grad_optimize = function(r,p, supp, weight, solver,delta,g)
+grad_optimize = function(r,p, supp, weight,delta,g)
 	gradients = zeros(26)
 	supports = zeros(26)
 	n = -Int(floor(log2(delta)))
+	solver = SOSModel(dual_optimizer(Clarabel.Optimizer))
 	for ind in zip([1:1:2*n;],append!([1:1:n;], [-n:1:-1;]))
 		#trying with replacing alpha with x
 		model = SOSModel(solver)
@@ -229,8 +231,6 @@ estimate_poly = function(i,r)
 		end
 		b[j+1] = (-1)^j * b[j+1]
 	end
-	eps = 1e-16
-	b[abs.(b) .< eps] .= 0
 	return(b,a0,up)
 end
 
@@ -258,7 +258,6 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	id = append!([1:1:13;], [-13:1:-1;])
 	dictionary = Dict(id .=> [estimate_poly(i,r) for i = append!([1:1:13;],[-13:1:-1;])])
 	pts = [-1+delta:0.01:1-delta;]
-	solver = Clarabel.Optimizer
 	n = length(r)
 	exponents = [0:1:n-1;]
 	g(x) = -2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1]
@@ -270,7 +269,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 		weight = SRstep[2]
 	
 		
-		points = grad_optimize(r, dictionary, supp, weight, solver,delta,g)
+		points = grad_optimize(r, dictionary, supp, weight,delta,g)
 		index = findmin(points[1])[2]
 		if(findmin(points[1])[1] > -tol)
 			conv = true
