@@ -23,7 +23,7 @@ grad_optimize = function(r,p, supp, weight,delta,g)
 	gradients = zeros(26)
 	supports = zeros(26)
 	n = -Int(floor(log2(delta)))
-	solver = SOSModel(dual_optimizer(Clarabel.Optimizer))
+	solver = SOSModel(dual_optimizer(Clarabel.Optimizer{BigFloat}))
 	for ind in zip([1:1:2*n;],append!([1:1:n;], [-n:1:-1;]))
 		#trying with replacing alpha with x
 		model = SOSModel(solver)
@@ -128,7 +128,7 @@ momentLS = function(a, b, r, tol)
 
 	conv = false
 	count = 0
-	while(count < 100 && !conv)
+	while(count < 1000 && !conv)
 		validmeasure = false
 		proposed = weight
 		while(!validmeasure)
