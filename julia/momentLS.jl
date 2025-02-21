@@ -89,8 +89,9 @@ SR = function(supp, weight,r)
 				c[i] = 2*sum((supp[i].^exponent) .* r) - r[1]
 			end
 
-			
-			new = B\c
+			prob = LinearProblem(B,c)
+			sol = LinearSolve.solve(prob)
+			new = sol.u
 			
 			if(all( >=(0), new))
 				validmeasure = true
