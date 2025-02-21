@@ -76,6 +76,7 @@ for i in 1:5
     weight = m[2]
     @rput supp
     @rput weight
+    R"m = SR1(r, dhat)"
     R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
     R"err2 = L2diff_L2Moment(r, supp, weight)"
     @rget err1
@@ -95,6 +96,7 @@ for i in 1:6
     weight = m[2]
     @rput supp
     @rput weight
+    R"m = SR1(r, dhat)"
     R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
     R"err2 = L2diff_L2Moment(r, supp, weight)"
     @rget err1
@@ -114,6 +116,7 @@ for i in 1:4
     weight = m[2]
     @rput supp
     @rput weight
+    R"m = SR1(r, dhat)"
     R"err1 = L2diff_L2Moment(r, m$support, m$weights)"
     R"err2 = L2diff_L2Moment(r, supp, weight)"
     @rget err1
