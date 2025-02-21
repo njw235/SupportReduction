@@ -42,7 +42,7 @@ grad_optimize = function(r,p, supp, weight,delta,g)
 		d = prod((1 .- transform(x,ind[2]).*supp))
 	
 			
-		h = f + (g(x))*d
+		h = f + (-2 * sum(p[ind[2]][1] .* x.^[0:1:p[ind[2]][3]-1;]) + r[1])*d
 		if abs(ind[2]) == n
 			S = @set x>= 2^(abs(n)) * delta - 1 && 1-x >= 0
 		else
@@ -260,7 +260,6 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	pts = [-1+delta:0.01:1-delta;]
 	n = length(r)
 	exponents = [0:1:n-1;]
-	g(x) = -2 * sum(dictionary[ind[2]][1] .* x.^[0:1:dictionary[ind[2]][3]-1;]) + r[1]
 	conv = false
 	count = 0
 	while(count < 100 && !conv)
