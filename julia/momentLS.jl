@@ -19,7 +19,7 @@ transform = function(x,i)
 end
 
 
-grad_optimize = function(r,p, supp, weight,delta,g)
+grad_optimize = function(r,p, supp, weight,delta)
 	gradients = zeros(26)
 	supports = zeros(26)
 	n = -Int(floor(log2(delta)))
@@ -268,7 +268,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 		weight = SRstep[2]
 	
 		
-		points = grad_optimize(r, dictionary, supp, weight,delta,g)
+		points = grad_optimize(r, dictionary, supp, weight,delta)
 		index = findmin(points[1])[2]
 		if(findmin(points[1])[1] > -tol)
 			conv = true
