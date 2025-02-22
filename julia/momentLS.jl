@@ -27,7 +27,7 @@ grad_optimize = function(r,p, supp, weight,delta)
 	n = -Int(floor(log2(delta)))
 	for ind in zip([1:1:2*n;],append!([1:1:n;], [-n:1:-1;]))
 		#trying with replacing alpha with x
-		model = SOSModel(dual_optimizer(solver))
+		model = SOSModel(solver)
         set_string_names_on_creation(model, false)
 		@polyvar x
 		f = 0
@@ -219,8 +219,8 @@ end
 
 
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^16)))
-	t = Int(floor(2^abs(i) * log(10^16)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^12)))
+	t = Int(floor(2^abs(i) * log(10^12)))
 		a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
