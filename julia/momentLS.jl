@@ -218,8 +218,8 @@ end
 
 
 estimate_poly = function(i,r)
-	m = Int(ceil(exp(1+1/exp(1))*log(10^10)))
-	t = Int(floor(2^abs(i) * log(10^10)))
+	m = Int(ceil(exp(1+1/exp(1))*log(10^12)))
+	t = Int(floor(2^abs(i) * log(10^12)))
 		a0 = (1- 2.0^-abs(i))
 	up = min(m-1,t)
 
@@ -231,7 +231,6 @@ estimate_poly = function(i,r)
 		end
 		b[j+1] = (-1)^j * b[j+1]
 	end
-	b[abs.(b) .< 1e-16] .= 0
 	return(b,a0,up)
 end
 
