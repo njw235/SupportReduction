@@ -2,8 +2,8 @@ R"load('data/MC_chains.Rdata')"
 
 errorsP = zeros(4,5)
 errorsG = zeros(4,5)
-WerrorsP = zeros(4,5)
-WerrorsG = zeros(4,5)
+AerrorsP = zeros(4,5)
+AerrorsG = zeros(4,5)
 for N in 2:5
     for j in 1:5
         @rput N
@@ -20,16 +20,16 @@ for N in 2:5
         R"m = SR1(r,dhat)"
         R"errorp = L2diff_L2Moment(r,supp, weight)"
         R"errorg = L2diff_L2Moment(r, m$support, m$weights)"
-        R"errG = wasserstein1d(m$support, c(0.5), p = 1, m$weights, c(r[1]))"
-        R"errP = wasserstein1d(supp, c(0.5), p = 1, weight, c(r[1]))"
+        R"errG = (asympVariance(m$weights, m$support) - 4)^2"
+        R"errP = (asympVariance(weight, supp) - 4)^2"
         @rget errorp
         @rget errorg
         @rget errP
         @rget errG
         errorsP[N-1, j] = errorp
         errorsG[N-1,j] = errorg
-        WerrorsP[N-1,j] = errP
-        WerrorsG[N-1,j] = errG
+        AerrorsP[N-1,j] = errP
+        AerrorsG[N-1,j] = errG
     end
 end
 
