@@ -145,7 +145,7 @@ mixingmeasure = function(r, delta,supp, weight, tol, graph = false)
     w = copy(weight)
 	conv = false
 	count = 0
-	while(count < 100 && !conv)
+	while(count < 200 && !conv)
 		SRstep = SRm(s, w,r)
 		s = SRstep[1]
 		w = SRstep[2]
