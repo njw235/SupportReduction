@@ -278,5 +278,5 @@ for N in [50,100,500,1000,5000,10000]
     errordict[N] = errorlist 
 end
 
-errordict
+print(errordict)
 
