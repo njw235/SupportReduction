@@ -231,6 +231,7 @@ estimate_poly = function(i,r)
 		end
 		b[j+1] = (-1)^j * b[j+1]
 	end
+	b[b .<= 1e-20] .= 0
 	return(b,a0,up)
 end
 

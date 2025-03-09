@@ -4,6 +4,7 @@ errorsP = zeros(4,5)
 errorsG = zeros(4,5)
 AerrorsP = zeros(4,5)
 AerrorsG = zeros(4,5)
+R"set.seed(1234)"
 for N in 2:5
     for j in 1:5
         @rput N
