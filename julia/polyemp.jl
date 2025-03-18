@@ -8,8 +8,8 @@ times = zeros(length(10:25:250;))
 for i in [10:25:250;]
 
     @polyvar x
-    f = rand(i) .* x.^[1:1:i;]
-    g = rand(5) .* x.^[0:1:4;]
+    f = sum(rand(i) .* x.^[1:1:i;])
+    g = sum(rand(5) .* x.^[0:1:4;])
     S = @set x>=0 && x <= 1
     model = SOSModel(Clarabel.Optimizer)
     @variable(model, s)
