@@ -14,7 +14,7 @@ for i in [10:25:250;]
     model = SOSModel(Clarabel.Optimizer)
     @variable(model, s)
     @objective(model, Max, s)
-    @constraint(model, c, f >= s*g,S)
+    @constraint(model, c, f -s*g>= 0,domain = S)
     optimize!(model)
     times[Int((i-10)/25) + 1] = solve_time(model)
 end
