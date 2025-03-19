@@ -19,5 +19,5 @@ for i in [10:25:250;]
     times[Int((i-10)/25) + 1] = solve_time(model)
 end
 
-plot([1:1:length([10:25:250;]);], times)
+plot([10:25:250;], times)
 savefig("timeplt.png")
