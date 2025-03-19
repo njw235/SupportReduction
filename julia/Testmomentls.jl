@@ -1,4 +1,4 @@
-include("julia/momentLS.jl")
+include("momentLS.jl")
 R"load('data/MC_chains.Rdata')"
 
 errorsP = zeros(4,10)
