@@ -1,4 +1,5 @@
 include("momentLS.jl")
+R"library(momentLS)"
 R"load('MC_chains.Rdata')"
 
 errorsP = zeros(4,10)
