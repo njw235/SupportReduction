@@ -1,5 +1,5 @@
 include("momentLS.jl")
-R"load('data/MC_chains.Rdata')"
+R"load('MC_chains.Rdata')"
 
 errorsP = zeros(4,10)
 errorsG = zeros(4,10)
