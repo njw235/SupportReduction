@@ -274,7 +274,7 @@ for N in [50,100,500,1000,5000,10000]
     end
 
     errorlist = reduce(+, eachcol(errors)) ./ size(errors,2)
-
+    println(errors)
     errordict[N] = errorlist 
 end
 

@@ -10,8 +10,6 @@ using Distributions
 using LinearAlgebra
 using LinearSolve
 using Plots
-using Dualization
-
 
 
 transform = function(x,i)
