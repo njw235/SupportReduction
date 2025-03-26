@@ -112,109 +112,6 @@ SR = function(supp, weight,r)
 end
 
 
-momentLS = function(a, b, r, tol)
-	pts = []
-	solver = Clarabel.Optimizer
-	n = length(r)
-	ln = Int(ceil(log(n)))
-	supp = [rand(Uniform(-1,1))]
-	exponents = [0:1:n-1;]
-	ai = 2*sum((supp[1].^exponents).*r) - r[1]
-	Bi = (1 + supp[1]^2)/(1-supp[1]^2)
-
-	weight = [ai/Bi]
-
-	conv = false
-	count = 0
-	while(count < 1000 && !conv)
-		validmeasure = false
-		proposed = weight
-		while(!validmeasure)
-			B = zeros(length(supp), length(supp))
-			for i in 1:length(supp)
-				for j in 1:length(supp)
-					B[i,j] = (1+supp[i]*supp[j])/(1-supp[i]*supp[j])	
-				end
-			end
-			c = zeros(length(supp))
-			for i in 1:length(supp)
-				c[i] = 2*sum((supp[i].^exponents) .* r) - r[1]
-			end
-
-			prob = LinearProblem(B,c)
-			sol = LinearSolve.solve(prob)
-			unrestweight = sol.u
-			
-			if(all( >=(0), unrestweight))
-				validmeasure = true
-				weight = unrestweight
-			else
-				t = proposed./(-unrestweight .+ proposed)
-				pop!(t)
-				t[t .< 0] .= typemax(Int)
-				t[t .> 0] .= typemax(Int)
-				bd = findmin(t)
-				proposed = (1-bd[1]).*proposed + bd[1] .* unrestweight
-				deleteat!(supp, bd[2])
-				deleteat!(proposed,bd[2])
-			end
-
-		end
-		model = SOSModel(solver)
-	@polyvar x
-		
-	f = 0
-	for i in 1:length(supp)
-		g=1
-		for j in 1:length(supp)
-			if( j != i)
-				g = g* (1 - x*supp[j])
-			end
-		end
-		f = f + weight[i]*(1 + x*supp[i])*g
-	end
-		
-		
-		h = f + (-2 * sum(r[1:ln] .* x.^exponents[1:ln]) + r[1])*prod((1 .- x.*supp))
-		d = prod((1 .- x.*supp))
-		
-		if(count == 2)
-			display(plot(grid, h.(grid)./d.(grid)))
-		else
-			display(plot!(grid, h.(grid)./d.(grid)))
-		end
-	 	S = @set x-a >= 0 && b-x >= 0
-		@variable(model,s)
-		
-		@constraint(model,c, h >= s*d, domain = S)
-		@objective(model, Max, s)
-		optimize!(model)
-		
-		if(abs(objective_value(model)) < tol)
-			conv = true
-		end
-		
-		v = moment_matrix(model[:c])
-		
-		pt = atomic_measure(v, FixedRank(1))
-		print(pt)
-		
-		if(length(pt.atoms[1].center) == 1)
-			append!(supp, pt.atoms[1].center)
-			append!(pts, pt.atoms[1].center)
-		else
-			append!(supp, pt.atoms[1].center[2])
-			append!(pts, pt.atoms[1].center[2])
-		end
-		append!(weight, 0)
-		
-		count = count + 1
-	end
-	
-	return(supp, weight,pts)
-end
-
-
 estimate_poly = function(i,r)
 	m = Int(ceil(exp(1+1/exp(1))*log(10^10)))
 	t = Int(floor(2^abs(i) * log(10^10)))
@@ -229,7 +126,6 @@ estimate_poly = function(i,r)
 		end
 		b[j+1] = (-1)^j * b[j+1]
 	end
-	b[b .<= 1e-20] .= 0
 	return(b,a0,up)
 end
 
@@ -260,7 +156,7 @@ momentLSmod = function(r, delta,supp, weight, tol, graph = false)
 	exponents = [0:1:n-1;]
 	conv = false
 	count = 0
-	while(count < 100 && !conv)
+	while(count < 25 && !conv)
 		SRstep = SR(supp, weight,r)
 		supp = SRstep[1]
 		weight = SRstep[2]
