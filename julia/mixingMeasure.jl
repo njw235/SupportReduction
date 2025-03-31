@@ -37,7 +37,9 @@ grad_opt = function(p, supp, weight, solver,delta,x)
 		for i in 1:length(supp)
 			g=1
 			for j in 1:length(supp)
+                if(j != i)
 					g = g* (1 - transform(x,ind[2])*supp[j])
+                end
 			end
 			f = f + weight[i]*(1-supp[i])*g
 		end
