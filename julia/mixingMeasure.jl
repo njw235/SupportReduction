@@ -265,24 +265,23 @@ for N in [50,100,500,1000,5000,10000]
 
             if(i == 1)
                 errors[i,j] = sum((pmf.(x) .- pmft1.(x)).^2)
-                werrors[i,j] = evaluate(KullbackLeibler(), pmf.(x), pmft1.(x))
+               
             elseif(i == 2)
                 errors[i,j] = sum((pmf.(x) .- pmft2.(x)).^2)
-                werrors[i,j] = evaluate(KullbackLeibler(), pmf.(x), pmft2.(x))
+               
             else
                 errors[i,j] = sum((pmf.(x) .- pmft3.(x)).^2)
-                werrors[i,j] = evaluate(KullbackLeibler(), pmf.(x), pmft3.(x))
+                
             end
         end
     end
 
     errorlist = reduce(+, eachcol(errors)) ./ size(errors,2)
-    werrorlist = reduce(+, eachcol(werrors)) ./ size(werrors,2)
+
     
     errordict[N] = errorlist 
-    Werrordict[N] = werrorlist
+
 end
 
 print(errordict)
-print(werrorlist)
 
