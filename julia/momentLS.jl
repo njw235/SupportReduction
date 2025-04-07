@@ -146,7 +146,104 @@ estim_poly = function(s,x)
 	return sum(s[1] .* (x-s[2]).^exponents)
 end
 
+momentLS = function(a, b, r, tol)
+	pts = []
+	solver = Clarabel.Optimizer
+	n = length(r)
+	ln = Int(ceil(log(n)))
+	supp = [rand(Uniform(-1,1))]
+	exponents = [0:1:n-1;]
+	ai = 2*sum((supp[1].^exponents).*r) - r[1]
+	Bi = (1 + supp[1]^2)/(1-supp[1]^2)
 
+	weight = [ai/Bi]
+
+	conv = false
+	count = 0
+	while(count < 100 && !conv)
+		validmeasure = false
+		proposed = weight
+		while(!validmeasure)
+			B = zeros(length(supp), length(supp))
+			for i in 1:length(supp)
+				for j in 1:length(supp)
+					B[i,j] = (1+supp[i]*supp[j])/(1-supp[i]*supp[j])	
+				end
+			end
+			c = zeros(length(supp))
+			for i in 1:length(supp)
+				c[i] = 2*sum((supp[i].^exponents) .* r) - r[1]
+			end
+
+			prob = LinearProblem(B,c)
+			sol = LinearSolve.solve(prob)
+			unrestweight = sol.u
+			
+			if(all( >=(0), unrestweight))
+				validmeasure = true
+				weight = unrestweight
+			else
+				t = proposed./(-unrestweight .+ proposed)
+				pop!(t)
+				t[t .< 0] .= typemax(Int)
+				t[t .> 0] .= typemax(Int)
+				bd = findmin(t)
+				proposed = (1-bd[1]).*proposed + bd[1] .* unrestweight
+				deleteat!(supp, bd[2])
+				deleteat!(proposed,bd[2])
+			end
+
+		end
+		model = SOSModel(solver)
+	@polyvar x
+		
+	f = 0
+	for i in 1:length(supp)
+		g=1
+		for j in 1:length(supp)
+			if( j != i)
+				g = g* (1 - x*supp[j])
+			end
+		end
+		f = f + weight[i]*(1 + x*supp[i])*g
+	end
+		
+		
+		h = f + (-2 * sum(r .* x.^exponents) + r[1])*prod((1 .- x.*supp))
+		d = prod((1 .- x.*supp))
+		
+		print(h)
+		print(d)
+	 	S = @set x-a >= 0 && b-x >= 0
+		@variable(model,s)
+		
+		@constraint(model,c, h >= s*d, domain = S)
+		@objective(model, Max, s)
+		optimize!(model)
+		
+		if(abs(objective_value(model)) < tol)
+			conv = true
+		end
+		
+		v = moment_matrix(model[:c])
+		
+		pt = atomic_measure(v, FixedRank(1))
+		print(pt)
+		
+		if(length(pt.atoms[1].center) == 1)
+			append!(supp, pt.atoms[1].center)
+			append!(pts, pt.atoms[1].center)
+		else
+			append!(supp, pt.atoms[1].center[2])
+			append!(pts, pt.atoms[1].center[2])
+		end
+		append!(weight, 0)
+		
+		count = count + 1
+	end
+	
+	return(supp, weight,pts)
+end
 
 
 momentLSmod = function(r, delta,supp, weight, tol, graph = false)
